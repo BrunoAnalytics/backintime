@@ -251,7 +251,7 @@ class UdevRules(dbus.service.Object):
         print(f'{sucmd=} {rule=}')
 
         # store rule
-        if not owner in self.tmpDict:
+        if owner not in self.tmpDict:
             self.tmpDict[owner] = []
 
         self.tmpDict[owner].append(rule)
@@ -271,7 +271,7 @@ class UdevRules(dbus.service.Object):
         owner = info.nameOwner()
 
         # delete rule if no rules in tmp
-        if not owner in self.tmpDict or not self.tmpDict[owner]:
+        if owner not in self.tmpDict or not self.tmpDict[owner]:
             self.delete(sender, conn)
 
             return False

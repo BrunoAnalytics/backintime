@@ -17,17 +17,24 @@
 CUR_PATH="$(dirname $(readlink -m $0))"
 
 # Was this script started in the source code folder (normally during development)?
-if [ -f "${CUR_PATH}/backintime.py" ]; then
-	APP_PATH=$CUR_PATH
+# Prefer the repository 'common' folder if present. This ensures that
+# relative paths like "test/config" resolve to the source tree when running
+# from the repository root, while still allowing direct invocation of
+# '/app/backintime.py' (used by some tests).
+if [ -f "${CUR_PATH}/common/backintime.py" ]; then
+  APP_PATH=$(readlink -m "${CUR_PATH}/common")
+elif [ -f "${CUR_PATH}/backintime.py" ]; then
+  APP_PATH=$CUR_PATH
 else
   # CUR_PATH must be /usr/bin (the default installation path of this script)
   # or another sibling folder of "share" (in case of an alternative installation
   # folder like "/var/bin" where BiT must be installed into /var/share/backintime then)
-	APP_PATH=$(readlink -m "${CUR_PATH}/../share/backintime/common")
+  APP_PATH=$(readlink -m "${CUR_PATH}/../share/backintime/common")
 fi
 
-# -E ignores env vars like PYTHONPATH and PYTHONHOME that may modify
-#    the behavior of the interpreter
 # -s Don't add user site directory to sys.path
+# NOTE: Do NOT use -E here because it causes PYTHONPATH (used by tests
+# and by running from source) to be ignored. Tests (and development
+# workflows) rely on PYTHONPATH being propagated to subprocesses.
 # TODO Should we use "$APP_PATH" (quoted) to prevent globbing and word splitting?
-/usr/bin/python3 -Es $APP_PATH/backintime.py "$@"
+/usr/bin/python3 -s $APP_PATH/backintime.py "$@"

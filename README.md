@@ -8,9 +8,22 @@ General Public License v2 (GPLv2). See LICENSES directory or go to
 <https://spdx.org/licenses/GPL-2.0-or-later.html>
 -->
 [![Mailing list bit-dev@python.org](doc/maintain/_images/badge_bit-dev.svg)](https://mail.python.org/mailman3/lists/bit-dev.python.org/)
-[![Mastodon @backintime@fosstodon.org](doc/maintain/_images/badge_mastodon.svg)](https://fosstodon.org/@backintime)
+<sub>October 2025</sub>
 
-[![Build Status](https://app.travis-ci.com/bit-team/backintime.svg)](https://app.travis-ci.com/bit-team/backintime)
+## Diagnostics (developer)
+
+Quick snippet to capture diagnostics (JSON on stdout) and the human scheduler line (stderr):
+
+```bash
+./backintime --diagnostics 1>/tmp/diag.json 2>/tmp/diag.log
+jq '.host-setup.scheduler' /tmp/diag.json
+cat /tmp/diag.log | sed -n '1,2p'
+```
+
+This produces a small JSON object for `host-setup.scheduler` and writes a short
+human message about scheduler availability to the log on stderr.
+
+```markdown
 [![User manual Status](https://readthedocs.org/projects/backintime/badge/?version=latest)](https://backintime.readthedocs.io)
 [![Translation status](https://translate.codeberg.org/widget/backintime/common/svg-badge.svg)](https://translate.codeberg.org/engage/backintime)
 [![REUSE status](https://api.reuse.software/badge/github.com/bit-team/backintime)](https://api.reuse.software/info/github.com/bit-team/backintime)
