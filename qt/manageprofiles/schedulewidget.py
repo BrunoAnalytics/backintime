@@ -23,6 +23,7 @@ from PyQt6.QtWidgets import (QCheckBox,
 from bitbase import ScheduleMode, TimeUnit, HOURLY_BACKUPS
 import config
 import tools
+from tools import _, ngettext
 import qttools
 from manageprofiles import combobox
 

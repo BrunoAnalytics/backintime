@@ -6,6 +6,7 @@
 # General Public License v2 (GPLv2). See LICENSES directory or go to
 # <https://spdx.org/licenses/GPL-2.0-or-later.html>.
 """A dialog containing a QTextBrowser"""
+from tools import _
 from PyQt6.QtWidgets import QDialog, QTextBrowser, QVBoxLayout
 from PyQt6.QtGui import QGuiApplication, QFontDatabase, QIcon
 from PyQt6.QtCore import QTimer

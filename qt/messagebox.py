@@ -14,6 +14,8 @@ from PyQt6.QtWidgets import (QApplication,
                              QMessageBox,
                              QWidget)
 import qttools  # pylint: disable=cyclic-import
+from tools import _
+from gettext import ngettext
 
 
 def ask_password_dialog(parent, title, prompt, language_code, timeout):

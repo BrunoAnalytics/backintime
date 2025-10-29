@@ -40,6 +40,7 @@ import messagebox
 import snapshots
 import logger
 from inhibitsuspend import InhibitSuspend
+from tools import _
 
 DIFF_PARAMS = '%1 %2'
 

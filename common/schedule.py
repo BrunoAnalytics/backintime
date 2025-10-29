@@ -14,9 +14,10 @@ Basic functions for handling Cron, Crontab, and other scheduling-related
 features.
 """
 import subprocess
-from typing import Callable
+from typing import Callable, Optional
 import logger
 import tools
+from tools import _
 from bitbase import ScheduleMode, TimeUnit
 from exceptions import InvalidChar, InvalidCmd, LimitExceeded
 
@@ -27,15 +28,12 @@ as match target while parsing the crontab file. See
 :func:`remove_bit_from_crontab()` for details.
 """
 
-
-def _determine_crontab_command() -> str:
+def _determine_crontab_command() -> Optional[str]:
     """Return the name of one of the supported crontab commands if available.
 
     Returns:
-        (str): The command name. Usually "crontab" or "fcrontab".
-
-    Raises:
-        RuntimeError: If none of the supported commands available.
+        (str|None): The command name (e.g. "crontab" or "fcrontab") or
+        ``None`` when no supported command is found.
     """
     to_check_commands = ['crontab', 'fcrontab']
     for cmd in to_check_commands:
@@ -51,11 +49,24 @@ def _determine_crontab_command() -> str:
     logger.openlog()
     msg = 'Command ' + ' and '.join(to_check_commands) + ' not found.'
     logger.critical(msg)
+    # Do NOT raise here during module import; return None so the module can be
+    # imported in environments without a system crontab and the rest of the
+    # code can handle HAS_SCHEDULER == False gracefully.
+    return None
 
-    raise RuntimeError(msg)
 
 
 CRONTAB_COMMAND = _determine_crontab_command()
+HAS_SCHEDULER: bool = CRONTAB_COMMAND is not None
+
+def get_scheduler_name():
+    return CRONTAB_COMMAND
+
+def diagnostics_line() -> str:
+    if HAS_SCHEDULER:
+        return f"Scheduler: available ({CRONTAB_COMMAND})"
+    return "Scheduler: not available"
+
 
 
 def read_crontab():
@@ -66,6 +77,9 @@ def read_crontab():
     Returns:
         list: Crontab lines.
     """
+    if not HAS_SCHEDULER:
+        return []
+
     proc = subprocess.run(
         [CRONTAB_COMMAND, '-l'],
         check=False,
@@ -113,6 +127,10 @@ def write_crontab(lines):
         bool: ``True`` if successful otherwise ``False``.
 
     """
+    if not HAS_SCHEDULER:
+        logger.warning('No scheduler available; skipping write_crontab')
+        return False
+
     content = '\n'.join(lines)
 
     # Crontab needs to end with a newline
@@ -200,7 +218,9 @@ def is_cron_running():
     Returns:
         bool: The answer.
     """
-
+    if not HAS_SCHEDULER:
+        return False
+    
     with subprocess.Popen(['ps', '-eo', 'comm'], stdout=subprocess.PIPE) as ps:
         try:
             subprocess.run(

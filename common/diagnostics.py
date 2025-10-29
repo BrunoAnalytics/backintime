@@ -179,10 +179,31 @@ def collect_diagnostics():
         result['external-programs']['shell-version'] \
             = shell_version.split('\n')[0]
 
+    # Always anonymize username/home paths, regardless of $SHELL presence
     result = _replace_username_paths(
         result=result,
         username=pwd.getpwuid(os.getuid()).pw_name
     )
+
+    # --- Scheduler diagnostics block (cron availability) ---
+    try:
+        import schedule
+        # Place scheduler diagnostics under host-setup to avoid adding a new
+        # top-level key (keeps compatibility with existing tests and output
+        # consumers).
+        result["host-setup"]["scheduler"] = {
+            "available": bool(getattr(schedule, "HAS_SCHEDULER", False)),
+            "name": schedule.get_scheduler_name(),
+            "line": schedule.diagnostics_line()
+        }
+    except Exception as e:
+        import logger
+        logger.error(f"diagnostics(scheduler) population failed: {e}")
+        result["host-setup"]["scheduler"] = {
+            "available": False,
+            "name": None,
+            "line": "Scheduler: not available"
+        }
 
     return result
 

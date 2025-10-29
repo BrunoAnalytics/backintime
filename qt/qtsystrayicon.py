@@ -29,6 +29,7 @@ import logger
 # Workaround until the codebase allows a single place to init all translations
 import tools
 tools.initiate_translation(None)
+from tools import _
 import snapshots
 import progress
 import logviewdialog
@@ -170,11 +171,11 @@ class QtSysTrayIcon:
     def prepareExit(self):
         self.timer.stop()
 
-        if not self.status_icon is None:
+        if self.status_icon is not None:
             self.status_icon.hide()
             self.status_icon = None
 
-        if not self.popup is None:
+        if self.popup is not None:
             self.popup.deleteLater()
             self.popup = None
 
@@ -204,7 +205,7 @@ class QtSysTrayIcon:
         if message is None and self.last_message is None:
             message = (0, _('Working…'))
 
-        if not message is None:
+        if message is not None:
             if message != self.last_message:
                 self.last_message = message
 

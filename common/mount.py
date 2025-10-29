@@ -157,7 +157,7 @@ class Mount:
 
             bit = tools.which('backintime')
 
-            if not action is None and not bit is None and len(bit):
+            if action is not None and bit is not None and len(bit):
                 cmd = [bit, 'pw-cache', action]
                 logger.debug(f'Call command: {cmd}', self)
 
@@ -985,7 +985,7 @@ class MountControl:
         if not len(current_kwargs) == len(saved_kwargs):
             return False
         for arg in list(current_kwargs.keys()):
-            if not arg in list(saved_kwargs.keys()):
+            if arg not in list(saved_kwargs.keys()):
                 return False
             if not current_kwargs[arg] == saved_kwargs[arg]:
                 return False

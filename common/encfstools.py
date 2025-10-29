@@ -384,9 +384,9 @@ class Encode:
         """
         write plain path to encfsctl stdin and read encrypted path from stdout
         """
-        if not 'p' in vars(self):
+        if 'p' not in vars(self):
             self.startProcess()
-        if not self.p.returncode is None:
+        if self.p.returncode is not None:
             logger.warning('\'encfsctl encode\' process terminated. Restarting.', self)
             del self.p
             self.startProcess()
@@ -410,7 +410,7 @@ class Encode:
 
         enc = ''
         m = self.re_asterisk.search(path)
-        if not m is None:
+        if m is not None:
             path_ = path[:]
             while True:
                 #search for foo/*, foo/*/bar, */bar or **/bar
@@ -622,9 +622,9 @@ class Decode:
             assert isinstance(path, str), 'path is not str type: %s' % path
         else:
             assert isinstance(path, bytes), 'path is not bytes type: %s' % path
-        if not 'p' in vars(self):
+        if 'p' not in vars(self):
             self.startProcess()
-        if not self.p.returncode is None:
+        if self.p.returncode is not None:
             logger.warning('\'encfsctl decode\' process terminated. Restarting.', self)
             del self.p
             self.startProcess()
@@ -657,22 +657,22 @@ class Decode:
             return line
         #[C] Change lines
         m = self.re_change.match(line)
-        if not m is None:
+        if m is not None:
             return m.group(1) + self.pathWithArrow(m.group(2))
         #[I] Information lines
         m = self.re_skip.match(line)
-        if not m is None:
+        if m is not None:
             return line
         m = self.re_info.match(line)
-        if not m is None:
+        if m is not None:
             return m.group(1) + self.pathWithArrow(m.group(2)) + m.group(3)
         #[E] Error lines
         m = self.re_error.match(line)
-        if not m is None:
+        if m is not None:
             return m.group(1) + self.path(m.group(2)) + m.group(3)
         #cp cmd
         m = self.re_info_cp.match(line)
-        if not m is None:
+        if m is not None:
             return m.group(1) + self.path(m.group(2)) + m.group(3) + self.path(m.group(4)) + m.group(5)
         return line
 
@@ -696,7 +696,7 @@ class Decode:
         rsync print symlinks like 'dest -> src'. This will decode both and also normal paths
         """
         m = self.re_all_except_arrow.match(path)
-        if not m is None:
+        if m is not None:
             return self.path(m.group(1)) + m.group(2) + self.path(m.group(3))
         else:
             return self.path(path)

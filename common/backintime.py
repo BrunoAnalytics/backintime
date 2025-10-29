@@ -11,8 +11,21 @@
 import os
 import subprocess
 import pathlib
+import schedule
 from datetime import datetime
 import tools
+import signal
+
+# Ensure Python does not raise BrokenPipeError on stdout flush when the
+# consumer of the pipe exits early (e.g. piping into `jq` inside the
+# container). Setting SIGPIPE to the default lets the process terminate
+# instead of raising exceptions on flush.
+try:
+    signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+except Exception:
+    # Best effort: on platforms where SIGPIPE cannot be changed we ignore.
+    pass
+
 # Workaround for situations where startApp() is not invoked.
 # E.g. when using --diagnostics and other argparse.Action
 tools.initiate_translation(None)
@@ -111,6 +124,7 @@ def encfs_deprecation_warning():
 
 
 def startApp(app_name='backintime'):
+    
     """
     Start the requested command or return config if there was no command
     in arguments.
@@ -127,6 +141,24 @@ def startApp(app_name='backintime'):
     logger.openlog()
 
     args = cliarguments.parse_arguments(args=None, agent=parser_agent)
+    # --- When running diagnostics, include scheduler information on stdout ---
+    # Nota: muitos comandos são despachados por args.func. Para garantir
+    # que a flag --diagnostics exiba também o estado do scheduler no CLI,
+    # imprimimos antes de delegar para args.func (quando aplicável).
+    try:
+        if getattr(args, "diagnostics", False):
+            # Linha principal (ex.: "Scheduler: available (crontab)"
+            # ou "Scheduler: not available")
+            print(schedule.diagnostics_line())
+            # Complemento explícito sobre “paths” de agendamento:
+            if schedule.HAS_SCHEDULER:
+                print("Scheduling paths: enabled")
+            else:
+                print("Scheduling paths: disabled (no system cron)")
+    except Exception as _e:  # defensivo: não falhe o diagnóstico por exceção daqui
+        # Não interrompa o fluxo; apenas registre (stderr/syslog via logger)
+        logger.error(f"diagnostics(scheduler) emission failed: {_e}")
+        # continue execution; the rest of diagnostics can still run
 
     # Name, Version, As Root, OS
     msg = ''

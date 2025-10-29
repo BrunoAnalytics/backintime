@@ -27,6 +27,7 @@ from PyQt6.QtWidgets import (QCheckBox,
                              QSizePolicy,
                              QWidget)
 import qttools
+from tools import _
 
 
 class SortedComboBox(QComboBox):

@@ -19,10 +19,17 @@ from PyQt6.QtGui import QFont, QPalette
 from PyQt6.QtCore import (Qt,
                           pyqtSlot,
                           pyqtSignal)
-from PyQt6.QtWidgets import (QAbstractItemView,
                              QApplication,
                              QTreeWidget,
                              QTreeWidgetItem)
+from PyQt6.QtWidgets import (QAbstractItemView,
+                             QApplication,
+                             QTreeWidget,
+                             QTreeWidgetItem,
+                             QHeaderView,
+                             QDialog,
+                             QVBoxLayout)
+from tools import _
 import snapshots
 from qttools_path import register_backintime_path
 register_backintime_path('common')

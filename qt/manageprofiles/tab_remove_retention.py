@@ -26,6 +26,7 @@ import config
 from bitbase import TimeUnit
 from event import Event
 import qttools
+from tools import _
 from manageprofiles.statebindcheckbox import StateBindCheckBox
 from manageprofiles.spinboxunit import SpinBoxWithUnit
 from manageprofiles.storagesizewidget import StorageSizeWidget

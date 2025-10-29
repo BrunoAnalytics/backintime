@@ -29,6 +29,7 @@ from PyQt6.QtWidgets import (QCheckBox,
                              QWidget)
 import config
 import tools
+from tools import _
 import logger
 import sshtools
 from exceptions import MountException, NoPubKeyLogin, KnownHost

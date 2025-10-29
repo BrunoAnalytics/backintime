@@ -40,7 +40,6 @@ value based on the instance with `select_values`
 
 import re
 import os
-import sys
 from time import strftime, gmtime
 
 PATH = os.path.join(os.getcwd(), 'common')

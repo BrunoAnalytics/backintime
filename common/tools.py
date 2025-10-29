@@ -848,8 +848,20 @@ def which(cmd):
     path = pathenv.split(':')
     common = as_backintime_path('common')
 
+    # Prefer to make the 'common' source folder available on PATH when
+    # running from source, but avoid shadowing executables placed in /app
+    # (copied as part of the test image). Append it so installed or copied
+    # entrypoints in PATH keep priority.
     if runningFromSource() and common not in path:
-        path.insert(0, common)
+        path.append(common)
+
+    # Prefer executable in current working directory: many tests and
+    # developer workflows expect a copied entrypoint (./backintime) to be
+    # preferred over other install locations.
+    cwd = os.getcwd()
+    fullpath = os.path.join(cwd, cmd)
+    if os.path.isfile(fullpath) and os.access(fullpath, os.X_OK):
+        return str(pathlib.Path(fullpath).resolve())
 
     for directory in path:
         fullpath = os.path.join(directory, cmd)
@@ -1493,7 +1505,7 @@ def envLoad(f):
         value = env_file.strValue(key)
         if not value:
             continue
-        if not key in list(env.keys()):
+        if key not in list(env.keys()):
             os.environ[key] = value
     del env_file
 
@@ -1913,11 +1925,11 @@ def patternHasNotEncryptableWildcard(pattern):
                         ``False`` if wildcard look like
                         ``foo/*``, ``foo/*/bar``, ``*/bar`` or ``**/bar``
     """
-    if not re_wildcard.search(pattern) is None:
+    if re_wildcard.search(pattern) is not None:
         return True
 
-    if (not re_asterisk is None
-            and not re_separate_asterisk.search(pattern) is None):
+    if (re_asterisk is not None
+            and re_separate_asterisk.search(pattern) is not None):
         return True
 
     return False

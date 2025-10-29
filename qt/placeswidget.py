@@ -26,6 +26,7 @@ from PyQt6.QtGui import QFont, QIcon, QPalette
 from PyQt6.QtCore import Qt
 import bitbase
 import config
+from tools import _
 
 
 class PlacesWidget(QTreeWidget):
