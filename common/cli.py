@@ -135,7 +135,7 @@ def checkConfig(cfg, crontab=True):
     okay()
 
     # umount
-    if not cfg.SNAPSHOT_MODES[mode][0] is None:
+    if cfg.SNAPSHOT_MODES[mode][0] is not None:
         test = 'Unmount'
         announceTest()
 
@@ -181,7 +181,7 @@ def selectSnapshot(snapshotsList, cfg, snapshot_id=None, msg='SnapshotID'):
     """
     len_snapshots = len(snapshotsList)
 
-    if not snapshot_id is None:
+    if snapshot_id is not None:
 
         try:
             sid = snapshots.SID(snapshot_id, cfg)

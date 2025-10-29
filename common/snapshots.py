@@ -3016,7 +3016,7 @@ class SID:
                 for line in f.readlines():
                     line = logFilter.filter(line.decode('utf-8').rstrip('\n'))
 
-                    if not line is None:
+                    if line is not None:
 
                         yield line
 

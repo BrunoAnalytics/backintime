@@ -1502,7 +1502,7 @@ def envLoad(f):
         value = env_file.strValue(key)
         if not value:
             continue
-        if not key in list(env.keys()):
+        if key not in list(env.keys()):
             os.environ[key] = value
     del env_file
 
@@ -1922,11 +1922,11 @@ def patternHasNotEncryptableWildcard(pattern):
                         ``False`` if wildcard look like
                         ``foo/*``, ``foo/*/bar``, ``*/bar`` or ``**/bar``
     """
-    if not re_wildcard.search(pattern) is None:
+    if re_wildcard.search(pattern) is not None:
         return True
 
-    if (not re_asterisk is None
-            and not re_separate_asterisk.search(pattern) is None):
+    if (re_asterisk is not None
+            and re_separate_asterisk.search(pattern) is not None):
         return True
 
     return False

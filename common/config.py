@@ -1652,7 +1652,7 @@ class Config(configfile.ConfigFileWithProfiles):
             cmd += '--profile-id %s ' % profile_id
 
         # User defined path to config file
-        if not self._LOCAL_CONFIG_PATH is self._DEFAULT_CONFIG_PATH:
+        if self._LOCAL_CONFIG_PATH is not self._DEFAULT_CONFIG_PATH:
             cmd += '--config %s ' % self._LOCAL_CONFIG_PATH
 
         # Enable debug output
