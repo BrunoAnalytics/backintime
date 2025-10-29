@@ -60,4 +60,11 @@ def _determine_licenses_dir() -> str | None:
     return None
 
 
-DIR_LICENSES = _determine_licenses_dir()
+# Prefer system-installed LICENSES (packaged installs). When running from
+# source (development/test), fall back to a local LICENSES directory next to
+# the project root (e.g. /app/LICENSES).
+_local = Path(__file__).parent.parent / 'LICENSES'
+if _local.is_dir():
+    DIR_LICENSES = _local
+else:
+    DIR_LICENSES = _determine_licenses_dir()
