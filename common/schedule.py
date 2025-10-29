@@ -27,7 +27,6 @@ as match target while parsing the crontab file. See
 :func:`remove_bit_from_crontab()` for details.
 """
 
-
 def _determine_crontab_command() -> str:
     """Return the name of one of the supported crontab commands if available.
 
@@ -55,7 +54,18 @@ def _determine_crontab_command() -> str:
     raise RuntimeError(msg)
 
 
+
 CRONTAB_COMMAND = _determine_crontab_command()
+HAS_SCHEDULER: bool = CRONTAB_COMMAND is not None
+
+def get_scheduler_name():
+    return CRONTAB_COMMAND
+
+def diagnostics_line() -> str:
+    if HAS_SCHEDULER:
+        return f"Scheduler: available ({CRONTAB_COMMAND})"
+    return "Scheduler: not available"
+
 
 
 def read_crontab():
@@ -66,6 +76,9 @@ def read_crontab():
     Returns:
         list: Crontab lines.
     """
+    if not HAS_SCHEDULER:
+        return []
+
     proc = subprocess.run(
         [CRONTAB_COMMAND, '-l'],
         check=False,
@@ -113,6 +126,10 @@ def write_crontab(lines):
         bool: ``True`` if successful otherwise ``False``.
 
     """
+    if not HAS_SCHEDULER:
+        logger.warning('No scheduler available; skipping write_crontab')
+        return False
+
     content = '\n'.join(lines)
 
     # Crontab needs to end with a newline
@@ -200,7 +217,9 @@ def is_cron_running():
     Returns:
         bool: The answer.
     """
-
+    if not HAS_SCHEDULER:
+        return False
+    
     with subprocess.Popen(['ps', '-eo', 'comm'], stdout=subprocess.PIPE) as ps:
         try:
             subprocess.run(
