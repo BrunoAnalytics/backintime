@@ -1270,7 +1270,7 @@ class MainWindow(QMainWindow):
         if item is None:
             item = self.timeLine.currentItem()
 
-        if not item is None:
+        if item is not None:
             if not item.snapshot_id.isRoot:
                 enabled = True
 

@@ -848,11 +848,20 @@ def which(cmd):
     path = pathenv.split(':')
     common = as_backintime_path('common')
 
-    # Prefer the 'common' source folder when running from source so that
-    # development files (like 'common/backintime') are preferred over files
-    # that might exist in the CWD/root installed location.
+    # Prefer to make the 'common' source folder available on PATH when
+    # running from source, but avoid shadowing executables placed in /app
+    # (copied as part of the test image). Append it so installed or copied
+    # entrypoints in PATH keep priority.
     if runningFromSource() and common not in path:
-        path.insert(0, common)
+        path.append(common)
+
+    # Prefer executable in current working directory: many tests and
+    # developer workflows expect a copied entrypoint (./backintime) to be
+    # preferred over other install locations.
+    cwd = os.getcwd()
+    fullpath = os.path.join(cwd, cmd)
+    if os.path.isfile(fullpath) and os.access(fullpath, os.X_OK):
+        return str(pathlib.Path(fullpath).resolve())
 
     for directory in path:
         fullpath = os.path.join(directory, cmd)
@@ -860,12 +869,6 @@ def which(cmd):
         if os.path.isfile(fullpath) and os.access(fullpath, os.X_OK):
             fullpath = str(pathlib.Path(fullpath).resolve())
             return fullpath
-
-    # Fallback: check CWD last (some workflows invoke scripts from CWD)
-    cwd = os.getcwd()
-    fullpath = os.path.join(cwd, cmd)
-    if os.path.isfile(fullpath) and os.access(fullpath, os.X_OK):
-        return str(pathlib.Path(fullpath).resolve())
 
     return None
 

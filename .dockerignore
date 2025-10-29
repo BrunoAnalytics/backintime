@@ -1,0 +1,14 @@
+# Exclude VCS and editor/temp files from docker context
+.git
+.venv
+venv
+__pycache__
+*.pyc
+.pytest_cache
+node_modules
+dist
+build
+*.tar
+/.cache
+/.idea
+/.vscode

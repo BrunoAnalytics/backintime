@@ -44,7 +44,4 @@ USER appuser
 
 
 # 6) Rode a suíte COMMON primeiro (baseline), depois a QT (vamos habilitar depois)
-CMD bash -lc '\
-  echo "== Running common tests ==" && \
-  cd common && PYTHONPATH=/app/common pytest -q test \
-'
+CMD ["bash","-lc","echo '== Running common tests ==' && cd common && PYTHONPATH=/app/common:/app pytest -q test"]
