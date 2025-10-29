@@ -14,9 +14,10 @@ Basic functions for handling Cron, Crontab, and other scheduling-related
 features.
 """
 import subprocess
-from typing import Callable
+from typing import Callable, Optional
 import logger
 import tools
+from tools import _
 from bitbase import ScheduleMode, TimeUnit
 from exceptions import InvalidChar, InvalidCmd, LimitExceeded
 
@@ -27,14 +28,12 @@ as match target while parsing the crontab file. See
 :func:`remove_bit_from_crontab()` for details.
 """
 
-def _determine_crontab_command() -> str:
+def _determine_crontab_command() -> Optional[str]:
     """Return the name of one of the supported crontab commands if available.
 
     Returns:
-        (str): The command name. Usually "crontab" or "fcrontab".
-
-    Raises:
-        RuntimeError: If none of the supported commands available.
+        (str|None): The command name (e.g. "crontab" or "fcrontab") or
+        ``None`` when no supported command is found.
     """
     to_check_commands = ['crontab', 'fcrontab']
     for cmd in to_check_commands:
@@ -50,8 +49,10 @@ def _determine_crontab_command() -> str:
     logger.openlog()
     msg = 'Command ' + ' and '.join(to_check_commands) + ' not found.'
     logger.critical(msg)
-
-    raise RuntimeError(msg)
+    # Do NOT raise here during module import; return None so the module can be
+    # imported in environments without a system crontab and the rest of the
+    # code can handle HAS_SCHEDULER == False gracefully.
+    return None
 
 
 

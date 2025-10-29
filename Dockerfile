@@ -5,7 +5,7 @@ WORKDIR /app
 
 # 1) Deps base
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    rsync git cron udev openssh-client python3-dbus \
+  rsync git cron udev openssh-client python3-dbus jq \
  && rm -rf /var/lib/apt/lists/*
 
 

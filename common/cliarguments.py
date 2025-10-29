@@ -37,6 +37,7 @@ import bitbase  # noqa: E402
 import bitlicense  # noqa: E402
 import diagnostics  # noqa: E402
 import logger  # noqa: E402
+import schedule  # noqa: E402
 import clicommands  # noqa: E402
 from argparse import (ArgumentParser,  # noqa: E402
                       Namespace,
@@ -1031,6 +1032,24 @@ class ActionPrintDiagnostics(argparse.Action):
         super().__init__(*args, **kwargs)
 
     def __call__(self, *args, **kwargs):
+        # Emit human-readable scheduler lines first so CLI users and pipes
+        # that read the first lines can see scheduler status. Be defensive so
+        # diagnostics printing never fails completely because of this.
+        try:
+            # Main scheduler line (e.g. "Scheduler: available (crontab)"
+            # or "Scheduler: not available"). Write to stderr so that
+            # caller capturing stdout (e.g. tests) still receives pure JSON.
+            print(schedule.diagnostics_line(), file=sys.stderr)
+
+            # Complementary explicit information about scheduling paths
+            if schedule.HAS_SCHEDULER:
+                print("Scheduling paths: enabled", file=sys.stderr)
+            else:
+                print("Scheduling paths: disabled (no system cron)", file=sys.stderr)
+        except Exception as _e:
+            # Don't break diagnostics output because of scheduler formatting
+            logger.error(f"diagnostics(scheduler) emission failed: {_e}")
+
         data = diagnostics.collect_diagnostics()
         print(json.dumps(data, indent=4))
         sys.exit(bitbase.RETURN_OK)
