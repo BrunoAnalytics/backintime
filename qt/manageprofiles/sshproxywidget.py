@@ -21,6 +21,7 @@ from PyQt6.QtWidgets import (QVBoxLayout,
 from PyQt6.QtCore import Qt
 
 import qttools
+from tools import _
 
 
 class SshProxyWidget(QWidget):

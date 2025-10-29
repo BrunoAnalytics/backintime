@@ -47,6 +47,7 @@ from PyQt6.QtCore import (Qt,
                           QModelIndex,
                           QTimer)
 import qttools
+from tools import _
 from bitwidgets import Spinner
 
 

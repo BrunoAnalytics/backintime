@@ -15,6 +15,7 @@ from PyQt6.QtWidgets import (QDialog,
                              QLabel,
                              QToolTip,
                              QWidget)
+from tools import _
 
 
 class UserMessageDialog(QDialog):

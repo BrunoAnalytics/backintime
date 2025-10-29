@@ -18,6 +18,7 @@ register_backintime_path('common')
 import singleton  # noqa: E402
 import logger  # noqa: E402
 import tools  # noqa: E402
+from tools import _  # ensure _ is defined for static analysis
 from version import __version__  # noqa: E402
 
 

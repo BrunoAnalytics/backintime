@@ -8,6 +8,7 @@
 """Module with a widget combining a spinbox and a combobox."""
 from typing import Any
 from PyQt6.QtWidgets import QSpinBox, QWidget, QHBoxLayout
+from tools import _
 from manageprofiles.combobox import BitComboBox
 
 

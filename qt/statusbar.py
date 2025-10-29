@@ -23,6 +23,7 @@ from PyQt6.QtWidgets import (QFrame,
 from PyQt6.QtCore import QEvent
 from PyQt6.QtGui import QPalette, QColor
 import bitbase
+from tools import _
 import qttools
 
 _PROGRESS_BAR_WIDTH_FX = 10

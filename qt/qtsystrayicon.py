@@ -29,6 +29,7 @@ import logger
 # Workaround until the codebase allows a single place to init all translations
 import tools
 tools.initiate_translation(None)
+from tools import _
 import snapshots
 import progress
 import logviewdialog

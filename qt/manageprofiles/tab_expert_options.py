@@ -21,6 +21,7 @@ from PyQt6.QtWidgets import (QDialog,
                              QCheckBox)
 import config
 import tools
+from tools import _
 import qttools
 import messagebox
 from manageprofiles.statebindcheckbox import StateBindCheckBox

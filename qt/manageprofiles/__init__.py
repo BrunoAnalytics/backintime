@@ -26,6 +26,7 @@ from PyQt6.QtWidgets import (QDialog,
                              QLabel,
                              QPushButton)
 import qttools
+from tools import _
 import messagebox
 from statedata import StateData
 from manageprofiles.tab_general import GeneralTab

@@ -12,6 +12,7 @@ from PyQt6.QtWidgets import (QDialog,
                              QPushButton,
                              QVBoxLayout,
                              QHBoxLayout)
+from tools import _
 from PyQt6.QtCore import QTimer, Qt
 
 

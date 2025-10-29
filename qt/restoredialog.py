@@ -18,6 +18,7 @@ from PyQt6.QtWidgets import (QDialog,
 from PyQt6.QtCore import QMutex, QThread, QTimer, QUrl
 from inhibitsuspend import InhibitSuspend
 import messagebox
+from tools import _
 
 
 class RestoreDialog(QDialog):

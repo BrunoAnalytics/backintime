@@ -27,6 +27,7 @@ from PyQt6.QtWidgets import (QWidget,
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPalette, QBrush
 import tools
+from tools import _
 import qttools
 from qttools import custom_sort_order
 from filedialog import FileDialog

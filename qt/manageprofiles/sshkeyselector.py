@@ -20,6 +20,7 @@ from PyQt6.QtWidgets import (QButtonGroup,
 from PyQt6.QtGui import QColor, QPalette
 import sshtools
 import qttools
+from tools import _
 from manageprofiles.combobox import BitComboBox
 
 

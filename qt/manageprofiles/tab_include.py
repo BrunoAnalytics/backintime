@@ -23,6 +23,7 @@ from PyQt6.QtWidgets import (QWidget,
                              QHeaderView,
                              QAbstractItemView)
 from qttools import custom_sort_order
+from tools import _
 from filedialog import FileDialog
 
 
